@@ -11,7 +11,7 @@ const config = require('../config/index')
 
     exports.register = async (req, res, next) => {
         try{
-        const {name, email, password} = req.body
+        const {name, email, password, role} = req.body
 
         //validation
         const errors = validationResult(req);
@@ -34,6 +34,7 @@ const config = require('../config/index')
         user.name = name
         user.email = email
         user.password = await user.encryptPassword(password)
+        user.role = role
 
         await user.save()
         res.status(200).json({
@@ -46,7 +47,7 @@ const config = require('../config/index')
 
     exports.login = async(req, res, next) => {
         try{
-        const {name, email, password} = req.body
+        const {email, password} = req.body
 
         //validation
         const errors = validationResult(req);
