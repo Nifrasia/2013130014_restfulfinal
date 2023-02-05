@@ -15,10 +15,12 @@ const errorHandler = require('./middleware/errorHandler')
 var app = express();
 
 // view engine setup
-//app.set('views', path.join(__dirname, 'views'));
-//app.set('view engine', 'jade');
+// app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'jade');
 
-mongoose.connect(config.MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true , useFindAndModify:true});
+mongoose.connect(config.MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true});
+
+mongoose.set('strictQuery', true);
 
 app.use(logger('dev'));
 app.use(express.json({

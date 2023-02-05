@@ -3,6 +3,12 @@ const {validationResult} = require('express-validator')
 const jwt = require('jsonwebtoken')
 const config = require('../config/index')
 
+    exports.index = (req, res, next) => {
+        res.status(200).json({
+            fullname: 'Pronkamol Sathiwawong'
+        });
+    }
+
     exports.register = async (req, res, next) => {
         try{
         const {name, email, password} = req.body
