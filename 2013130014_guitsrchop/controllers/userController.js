@@ -3,15 +3,9 @@ const {validationResult} = require('express-validator')
 const jwt = require('jsonwebtoken')
 const config = require('../config/index')
 
-    exports.index = (req, res, next) => {
-        res.status(200).json({
-            fullname: 'Pronkamol Sathiwawong'
-        });
-    }
-
     exports.register = async (req, res, next) => {
         try{
-        const {name, email, password, role} = req.body
+        const {name, email, password} = req.body
 
         //validation
         const errors = validationResult(req);
@@ -34,7 +28,6 @@ const config = require('../config/index')
         user.name = name
         user.email = email
         user.password = await user.encryptPassword(password)
-        user.role = role
 
         await user.save()
         res.status(200).json({

@@ -9,6 +9,7 @@ const passport = require('passport')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var productsRouter = require('./routes/products');
 
 const errorHandler = require('./middleware/errorHandler')
 
@@ -37,6 +38,7 @@ app.use(passport.initialize())
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/products', productsRouter);
 
 app.use(errorHandler)
 module.exports = app;
