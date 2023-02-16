@@ -6,7 +6,7 @@ const product = require("../models/product")
 
 exports.add = async (req, res, next) => {
     try{
-    const {p_id, p_name, p_type, p_brand, p_price, p_instock} = req.body
+    const {p_id, p_name, p_type, p_brand, p_price} = req.body
 
     //validation
     const errors = validationResult(req);
@@ -25,13 +25,22 @@ exports.add = async (req, res, next) => {
         throw error;
     }
 
+    console.log(p_brand)
+
+    let pb
+
+    if(p_brand === undefined || p_brand === null){
+        pb = "No Brand"
+    }else{
+        pb = p_brand
+    }
+
     let product = new Product;
     product.p_id = p_id
     product.p_name = p_name
     product.p_type = p_type
-    product.p_brand = p_brand
     product.p_price = p_price
-    product.p_instock = p_instock
+    product.p_brand = pb
 
     await product.save()
     res.status(200).json({
@@ -40,4 +49,15 @@ exports.add = async (req, res, next) => {
     } catch (error){
     next(error)
     }
+}
+
+exports.getProduct = (req, res, next) => {
+
+    const {p_name, p_type, p_brand, p_price} = req.user
+    res.status(200).json({
+        p_name: p_name,
+        p_type: p_type,
+        p_price: p_price,
+        p_brand: p_brand
+    })
 }

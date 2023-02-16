@@ -97,3 +97,22 @@ const config = require('../config/index')
         email: email,
         })
     }
+
+    exports.update = async (req, res, next) => {
+
+        try{
+            const {name, email, role} = req.body
+    
+            const user = await User.updateOne({email : email},{
+                name: name,
+                email: email,
+                role: role
+            })
+        
+            res.status(200).json({
+                message: 'Data updated. / แก้ไขข้อมูลเรียบร้อยแล้ว'
+            });
+        } catch (error){
+            next(error)
+        }
+    }
