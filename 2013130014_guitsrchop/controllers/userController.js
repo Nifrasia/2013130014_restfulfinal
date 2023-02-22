@@ -3,6 +3,7 @@ const {validationResult} = require('express-validator')
 const jwt = require('jsonwebtoken')
 const config = require('../config/index')
 
+    //user regis
     exports.register = async (req, res, next) => {
         try{
         const {name, email, password} = req.body
@@ -38,6 +39,7 @@ const config = require('../config/index')
         }
     }
 
+    //user login
     exports.login = async(req, res, next) => {
         try{
         const {email, password} = req.body
@@ -86,8 +88,9 @@ const config = require('../config/index')
         } catch (error){
         next(error)
         }
-    }
+    } 
 
+    //get user profile
     exports.profile = (req, res, next) => {
 
         const {name, role, email} = req.user
@@ -98,6 +101,7 @@ const config = require('../config/index')
         })
     }
 
+    //user edit data
     exports.update = async (req, res, next) => {
 
         try{
@@ -107,12 +111,37 @@ const config = require('../config/index')
                 name: name,
                 email: email,
                 role: role
-            })
+            });
         
             res.status(200).json({
                 message: 'Data updated. / แก้ไขข้อมูลเรียบร้อยแล้ว'
             });
         } catch (error){
+            next(error)
+        }
+    }
+
+    //delete user
+    exports.destroy = async (req, res, next) => {
+
+        try{
+            const {email} = req.body
+    
+            const user = await User.deleteOne({email : email});
+    
+            const exist = await User.findOne({email : email});
+    
+            if(user.deletedCount === 0){
+                const error = new Error('This user is not in the system. / ไม่พบข้อมูลผู้ใช้งาน')
+                error.statusCode = 400
+                throw error;
+            }else {
+                return res.status(200).json({ 
+                    message: 'Data deleted. / ลบข้อมูลเรียบร้อยแล้ว',
+                });
+            }
+    
+        } catch(error){
             next(error)
         }
     }

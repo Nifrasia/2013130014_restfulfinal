@@ -29,7 +29,7 @@ exports.add = async (req, res, next) => {
 
     let pb
 
-    if(p_brand === undefined || p_brand === null){
+    if(p_brand === ""){
         pb = "No Brand"
     }else{
         pb = p_brand
@@ -51,13 +51,35 @@ exports.add = async (req, res, next) => {
     }
 }
 
+//get product info
 exports.getProduct = (req, res, next) => {
 
-    const {p_name, p_type, p_brand, p_price} = req.user
+    const data = product.find();
     res.status(200).json({
-        p_name: p_name,
-        p_type: p_type,
-        p_price: p_price,
-        p_brand: p_brand
+        data:data
     })
+}
+
+exports.delpro = async (req, res, next) => {
+
+    try{
+        const {p_id} = req.body
+
+        const product = await Product.deleteOne({p_id : p_id});
+
+        const exist = await Product.findOne({p_id : p_id});
+
+        if(product.deletedCount === 0){
+            const error = new Error('This product is not in the system. / ไม่พบข้อมูลสินค้า')
+            error.statusCode = 400
+            throw error;
+        }else {
+            return res.status(200).json({
+                message: 'Data deleted. / ลบข้อมูลเรียบร้อยแล้ว',
+            });
+        }
+
+    } catch(error){
+        next(error)
+    }
 }

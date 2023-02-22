@@ -3,6 +3,7 @@ var router = express.Router();
 const userController = require('../controllers/userController');
 const { body } = require('express-validator');
 const passportJWT = require('../middleware/passportJWT')
+const checkAdmin = require('../middleware/checkAdmin')
 
 router.post('/regis', [
     body('name').trim().not().isEmpty().withMessage("Please enter Name."),
@@ -17,6 +18,8 @@ router.post('/login', [
 
 router.get('/profile', [passportJWT.islogin],userController.profile)
 
-router.put('/', userController.update)
+router.put('/', [passportJWT.islogin, checkAdmin.isAdmin], userController.update)
+
+router.delete('/', [passportJWT.islogin, checkAdmin.isAdmin], userController.destroy)
   
 module.exports = router;
