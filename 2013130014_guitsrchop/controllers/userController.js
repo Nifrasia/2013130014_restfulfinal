@@ -20,7 +20,7 @@ const config = require('../config/index')
         const existemail = await User.findOne({email: email})
 
         if(existemail){
-            const error = new Error("E-mail is already in the system. / อีเมลล์มีในระบบแล้ว")
+            const error = new Error("E-mail is already in the system. / มีอีเมลล์นี้ในระบบแล้ว")
             error.statusCode = 400;
             throw error;
         }
@@ -91,13 +91,11 @@ const config = require('../config/index')
     } 
 
     //get user profile
-    exports.profile = (req, res, next) => {
+    exports.profile = async (req, res, next) => {
 
-        const {name, role, email} = req.user
+        const prof = await User.find()
         res.status(200).json({
-        name: name,
-        role: role,
-        email: email,
+            data : prof
         })
     }
 
@@ -106,6 +104,14 @@ const config = require('../config/index')
 
         try{
             const {name, email, role} = req.body
+
+            const existuser = await User.findOne({email: email})
+
+        if(!existuser){
+            const error = new Error("This is not exsist in the system. / ผู้ใช้งานนี้ไม่มีในระบบ")
+            error.statusCode = 404;
+            throw error;
+        }
     
             const user = await User.updateOne({email : email},{
                 name: name,
@@ -128,8 +134,6 @@ const config = require('../config/index')
             const {email} = req.body
     
             const user = await User.deleteOne({email : email});
-    
-            const exist = await User.findOne({email : email});
     
             if(user.deletedCount === 0){
                 const error = new Error('This user is not in the system. / ไม่พบข้อมูลผู้ใช้งาน')

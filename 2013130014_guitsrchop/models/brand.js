@@ -11,7 +11,7 @@ const brandSchema = new Schema({
 
 brandSchema.virtual('product',{
     ref: 'Product',
-    localField: '_id',
+    localField: 'p_brand',
     foreignField: 'p_brand'
 });
 
